@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-worker
+  labels:
+    app: spark
+    role: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spark
+      role: worker
+  template:
+    metadata:
+      labels:
+        app: spark
+        role: worker
+    spec:
+      containers:
+      - name: spark-worker
+        image: bitnami/spark:latest
+        env:
+        - name: SPARK_MODE
+          value: "worker"
+        - name: SPARK_MASTER_URL
+          value: "spark://spark-master:7077"
+        - name: SPARK_WORKER_WEBUI_PORT
+          value: "8081"
+        ports:
+        - containerPort: 8081

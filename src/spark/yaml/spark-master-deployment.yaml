@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-master
+  labels:
+    app: spark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spark
+      role: master
+  template:
+    metadata:
+      labels:
+        app: spark
+        role: master
+    spec:
+      containers:
+      - name: spark-master
+        image: bitnami/spark:latest
+        env:
+        - name: SPARK_MODE
+          value: "master"
+        - name: SPARK_MASTER_WEBUI_PORT
+          value: "8080"
+        ports:
+        - containerPort: 7077  # Cổng RPC
+        - containerPort: 8080  # Cổng Web UI
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+spec:
+  selector:
+    app: spark
+    role: master
+  ports:
+  - name: rpc-port
+    protocol: TCP
+    port: 7077
+    targetPort: 7077
+  - name: webui-port
+    protocol: TCP
+    port: 8080
+    targetPort: 8080

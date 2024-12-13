@@ -1,0 +1,1 @@
+chạy 1 file             python3 /path/to/file.py
